@@ -8,7 +8,9 @@
   "license": "ISC",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "build": "rm -rf dist && cp -R src dist",
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
   },
   "dependencies": {
     "@clerk/express": "^2.1.47",
