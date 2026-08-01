@@ -1,17 +1,21 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
+
+import "dotenv/config";
+
 import fs from "fs";
 import path from "path";
-import { connectDB } from "./lib/db.js";
+
 import { clerkMiddleware } from "@clerk/express";
+
+import User from "./models/user.model.js";
+import { connectDB } from "./lib/db.js";
 import job from "./lib/cron.js";
+
 import clerkWebhook from "./webhooks/clerk.webhook.js";
 import authRoutes from "./routes/auth.route.js";
-
-dotenv.config();
-
-const app = express();
+import messageRoutes from "./routes/message.route.js";
+import { app, server } from "./lib/socket.js";
 
 const PORT = process.env.PORT;
 const FRONTEND_URL = process.env.FRONTEND_URL;
@@ -25,15 +29,16 @@ app.use(
   clerkWebhook,
 );
 
-app.use(clerkMiddleware());
 app.use(express.json());
-app.use(cors({ origin: FRONTEND_URL, Credentials: true }));
+app.use(cors({ origin: FRONTEND_URL, credentials: true }));
+app.use(clerkMiddleware());
 
 app.get("/health", (req, res) => {
   res.status(200).json({ ok: true });
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/messages", messageRoutes);
 
 // if the public directory exists, serve the static files
 // this is for the production build
@@ -45,9 +50,9 @@ if (fs.existsSync(publicDir)) {
   });
 }
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   connectDB();
-  console.log(`Server is running : ${PORT}`);
+  console.log("Server is up and running on PORT:", PORT);
 
   if (process.env.NODE_ENV === "production") job.start();
 });
