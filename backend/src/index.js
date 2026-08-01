@@ -7,6 +7,7 @@ import { connectDB } from "./lib/db.js";
 import { clerkMiddleware } from "@clerk/express";
 import job from "./lib/cron.js";
 import clerkWebhook from "./webhooks/clerk.webhook.js";
+import authRoutes from "./routes/auth.route.js";
 
 dotenv.config();
 
@@ -31,6 +32,8 @@ app.use(cors({ origin: FRONTEND_URL, Credentials: true }));
 app.get("/health", (req, res) => {
   res.status(200).json({ ok: true });
 });
+
+app.use("/api/auth", authRoutes);
 
 // if the public directory exists, serve the static files
 // this is for the production build
