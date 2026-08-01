@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 import { connectDB } from "./lib/db.js";
 import { clerkMiddleware } from "@clerk/express";
+import job from "./lib/cron.js";
 
 dotenv.config();
 
@@ -19,6 +20,10 @@ app.use(clerkMiddleware());
 app.use(express.json());
 app.use(cors({ origin: FRONTEND_URL, Credentials: true }));
 
+app.get("/health", (req, res) => {
+  res.status(200).json({ ok: true });
+});
+
 // if the public directory exists, serve the static files
 // this is for the production build
 if (fs.existsSync(publicDir)) {
@@ -32,4 +37,6 @@ if (fs.existsSync(publicDir)) {
 app.listen(PORT, () => {
   connectDB();
   console.log(`Server is running : ${PORT}`);
+
+  if (process.env.NODE_ENV === "production") job.start();
 });
