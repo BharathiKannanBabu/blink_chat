@@ -10,7 +10,8 @@
   "scripts": {
     "build": "rm -rf dist && cp -R src dist",
     "dev": "nodemon src/index.js",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "db:seed": "node src/seeds/user.seed.js"
   },
   "dependencies": {
     "@clerk/express": "^2.1.47",
