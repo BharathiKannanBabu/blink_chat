@@ -33,7 +33,7 @@ export function AuthActionPanel() {
               className="absolute -inset-3.5 rounded-[20px] bg-linear-to-br from-accent/22 via-accent/8 to-transparent opacity-90 blur-xl dark:from-accent/28 dark:via-accent/10"
             />
             <div className={logoTileClassName}>
-              <AppLogo size={52} className="rounded-xl" alt="" />
+              <AppLogo size={85} className="rounded-xl" alt="" />
             </div>
           </div>
 
